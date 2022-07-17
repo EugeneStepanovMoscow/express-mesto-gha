@@ -10,7 +10,7 @@ module.exports.addCard = (req, res) => {
   const {name, link} = req.body
   const owner = req.user._id
   Card.create({name, link, owner})
-    .then((dataFromDB) => res.send(`Карточке с именем: ${dataFromDB.name} присвоен номер: ${dataFromDB._id}`))
+    .then((dataFromDB) => res.send(dataFromDB))
     .catch((err) => res.status(400).send({ message: `Произошла ошибка: ${err}`}));
 }
 
@@ -28,7 +28,7 @@ module.exports.addLike = (req, res) => {
     {$addToSet: {likes: req.user._id}},
     {new: true})
       .then((DataFromBD) => {
-        res.send(`Карточку с именем ${DataFromBD.name} лайкнули: ${DataFromBD.likes.length} раз`)
+        res.status(200).send(DataFromBD)
       })
       .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}`}));
 }
@@ -39,7 +39,7 @@ module.exports.deleteLike = (req, res) => {
     {$pull: {likes: req.user._id}},
     {new: true})
       .then((DataFromBD) => {
-        res.send(`Карточку с именем ${DataFromBD.name} лайкнули: ${DataFromBD.likes.length} раз`)
+        res.status(200).send(DataFromBD)
       })
       .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}`}));
 }
