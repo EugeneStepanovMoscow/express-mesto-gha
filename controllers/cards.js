@@ -11,7 +11,7 @@ module.exports.addCard = (req, res) => {
   const owner = req.user._id
   Card.create({name, link, owner})
     .then((dataFromDB) => res.send(`Карточке с именем: ${dataFromDB.name} присвоен номер: ${dataFromDB._id}`))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}`}));
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка: ${err}`}));
 }
 
 module.exports.deleteCard = (req, res) => {
