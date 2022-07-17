@@ -26,11 +26,16 @@ module.exports.addLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     {$addToSet: {likes: req.user._id}},
-    {new: true})
+    {new: true},
+    (err) => {
+      if (err) {
+        res.status(404).send({"message": err})
+      }
+    })
       .then((DataFromBD) => {
         res.status(200).send(DataFromBD)
       })
-      .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}`}));
+      .catch((err) => res.status(400).send({"message": err.message}));
 }
 
 module.exports.deleteLike = (req, res) => {
