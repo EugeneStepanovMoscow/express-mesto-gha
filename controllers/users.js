@@ -54,6 +54,6 @@ module.exports.avatarUserUpdate = (req, res) => {
     req.user._id,
     {avatar: req.body.avatar},
     {runValidators: true})
-    .then((dataFromDB) => res.send({ message: `Ссылка на аватар: ${dataFromDB.avatar}`}))
+    .then((dataFromDB) => res.send({ message: dataFromDB.avatar}))
     .catch((err) => res.status(400).send({ message: `Произошла ошибка: ${err}`}));
 }
