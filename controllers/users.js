@@ -2,6 +2,9 @@ const User = require('../models/user') //работа с БД модели User
 
 module.exports.createUser = (req, res) => {
   const {name, about, avatar} = req.body
+  if ((!name) || (!about) || (!avatar)) {
+    return res.status(400).send({ message: `Произошла ошибка: Не заполнены все поля`})
+  }
   User.create({name, about, avatar})
     .then((dataFromDB) => res.send(dataFromDB))
     .catch((err) => {
