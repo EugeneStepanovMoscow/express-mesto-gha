@@ -6,7 +6,7 @@ module.exports.createUser = (req, res) => {
     .then((dataFromDB) => res.send(dataFromDB))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: err.errors})
+        return res.status(400).send({ message: `Произошла ошибка: ${err}`})
       } else {
         return res.status(500).send({ message: `Произошла ошибка: ${err}`})
       }
