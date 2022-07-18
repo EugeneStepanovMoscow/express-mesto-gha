@@ -53,7 +53,16 @@ module.exports.deleteLike = (req, res) => {
     {$pull: {likes: req.user._id}},
     {new: true})
       .then((dataFromBD) => {
-        res.status(200).send(dataFromBD)
+        if (!dataFromBD) {
+          return res.status(404).send({ message: `Произошла ошибка: Карточка не найдена`})
+        }
+        res.status(200).send({dataFromBD})
       })
-      .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}`}));
+      .catch((err) => {
+        if (err.name === 'ValidationError') {
+          return res.status(400).send({ message: `Произошла ошибка: ${err}`})
+        } else {
+          return res.status(500).send({ message: `Произошла ошибка: ${err}`})
+        }
+      })
 }
