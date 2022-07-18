@@ -53,7 +53,8 @@ module.exports.avatarUserUpdate = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     {avatar: req.body.avatar},
-    {runValidators: true})
+    {runValidators: true,
+    new: true})
     .then((dataFromDB) => res.send({dataFromDB}))
     .catch((err) => res.status(400).send({ message: `Произошла ошибка: ${err}`}));
 }
