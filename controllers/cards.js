@@ -26,7 +26,7 @@ module.exports.addCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((dataFromBD) => {
-      res.send(`Карточка с именем: ${dataFromBD.name} удалена`)
+      res.send({ message: `Карточка с именем: ${dataFromBD.name} удалена`})
     })
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}`}));
 }
@@ -36,15 +36,20 @@ module.exports.addLike = (req, res) => {
     req.params.cardId,
     {$addToSet: {likes: req.user._id}},
     {new: true},
-    (err) => {
-      if (err) {
-        res.status(404).send({"message": err})
-      }
-    })
+    // (err) => {
+    //   if (err) {
+    //     res.status(404).send({message: err})
+    //   }
+    )
+
       .then((dataFromBD) => {
-        res.status(200).send(dataFromBD)
+        res.status(201).send({dataFromBD})
       })
-      .catch((err) => res.status(400).send({"message": err.message}));
+      if (err.name === 'ValidationError') {
+        return res.status(404).send({ message: `Произошла ошибка: ${err}`})
+      } else {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}`})
+      }
 }
 
 module.exports.deleteLike = (req, res) => {
@@ -60,9 +65,9 @@ module.exports.deleteLike = (req, res) => {
       })
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          return res.status(400).send({ message: `Произошла ошибка: ${err}`})
+          return res.status(404).send({ message: `Произошла ошибка: ${err}`})
         } else {
-          return res.status(500).send({ message: `Произошла ошибка: ${err}`})
+          return res.status(400).send({ message: `Произошла ошибка: ${err}`})
         }
       })
 }
