@@ -18,8 +18,11 @@ module.exports.createUser = (req, res) => {
 
 module.exports.findUser = (req, res) => {
   User.findById(req.params.id)
-    .then((UserFromBD) => {
-      res.send(UserFromBD)
+    .then((userFromBD) => {
+      if (!userFromBD) {
+        return res.status(400).send({ message: `Произошла ошибка: Пользователь не найден`})
+      }
+      res.send(userFromBD)
     })
     .catch((err) => res.status(404).send({ message: `Произошла ошибка: ${err}`}));
 }
