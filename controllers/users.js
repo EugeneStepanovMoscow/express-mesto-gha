@@ -3,9 +3,14 @@ const User = require('../models/user') //работа с БД модели User
 module.exports.createUser = (req, res) => {
   const {name, about, avatar} = req.body
   User.create({name, about, avatar})
-    // .then((dataFromDB) => res.send(`Пользователю с именем: ${dataFromDB.name} присвоен номер: ${dataFromDB._id}`))
     .then((dataFromDB) => res.send(dataFromDB))
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}`}));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: err.errors})
+      } else {
+        return res.status(500).send({ message: `Произошла ошибка: ${err}`})
+      }
+    })
 }
 
 module.exports.findUser = (req, res) => {
