@@ -8,6 +8,9 @@ module.exports.getAllCards = (req, res) => {
 
 module.exports.addCard = (req, res) => {
   const {name, link} = req.body
+  if ((!name) || (!link)) {
+    return res.status(400).send({ message: `Произошла ошибка: Не заполнены все поля`})
+  }
   const owner = req.user._id
   Card.create({name, link, owner})
     .then((dataFromDB) => res.send(dataFromDB))
