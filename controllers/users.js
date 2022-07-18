@@ -37,8 +37,9 @@ module.exports.profileUserUpdate = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     {name: req.body.name, about: req.body.about},
-    {new: true})
-      .then((dataFromDB) => res.send({ message: `Новое имя пользователя ${dataFromDB.name}`}))
+    {new: true,
+    runValidators: true})
+      .then((dataFromDB) => res.send({ message: dataFromDB}))
       .catch((err) => {
         if (err.name === 'ValidationError') {
           return res.status(400).send({ message: `Произошла ошибка: ${err}`})
@@ -49,7 +50,10 @@ module.exports.profileUserUpdate = (req, res) => {
 }
 
 module.exports.avatarUserUpdate = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, {avatar: req.body.avatar})
-    .then((dataFromDB) => res.send(`Ссылка на аватар: ${dataFromDB.name}`))
+  User.findByIdAndUpdate(
+    req.user._id,
+    {avatar: req.body.avatar},
+    {runValidators: true})
+    .then((dataFromDB) => res.send({ message: `Ссылка на аватар: ${dataFromDB.avatar}`}))
     .catch((err) => res.status(400).send({ message: `Произошла ошибка: ${err}`}));
 }
