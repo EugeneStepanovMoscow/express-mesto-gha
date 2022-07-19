@@ -49,6 +49,7 @@ module.exports.profileUserUpdate = (req, res) => {
       })
 }
 
+
 module.exports.avatarUserUpdate = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
