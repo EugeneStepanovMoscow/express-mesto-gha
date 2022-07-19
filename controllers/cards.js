@@ -30,13 +30,13 @@ module.exports.addCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((dataFromBD) => {
-      res.send({ message: `Карточка с именем: ${dataFromBD.name} удалена`})
+      res.status(200).send({ message: `Карточка с именем: ${dataFromBD.name} удалена`})
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: `Произошла ошибка: ${err}`})
-      } else {
         return res.status(404).send({ message: `Произошла ошибка: ${err}`})
+      } else {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}`})
       }
     })
 }
