@@ -43,6 +43,9 @@ module.exports.addLike = (req, res) => {
     //   }
     )
       .then((dataFromBD) => {
+        if (!dataFromBD) {
+          return res.status(400).send({ message: `Произошла ошибка: Карточка не найдена`})
+        }
         res.status(201).send({dataFromBD})
       })
       .catch((err) => {
