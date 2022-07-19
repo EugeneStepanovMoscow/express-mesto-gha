@@ -35,7 +35,8 @@ module.exports.addLike = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     {$addToSet: {likes: req.user._id}},
-    {new: true},
+    {new: true,
+    runValidators: true}
     // (err) => {
     //   if (err) {
     //     res.status(404).send({message: err})
