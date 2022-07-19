@@ -16,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 const app = express();
 
 app.use((req, res, next) => {
-  console.log('Добавлен ID')
+  console.log('Добавлен ID');
   req.user = {
     _id: '62d29762e781eae489e64872' // id st.Eugene
   };

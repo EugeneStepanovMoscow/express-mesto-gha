@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-//схема пользователя в базе
+// схема пользователя в базе
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -24,8 +24,7 @@ const cardSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  }
-})
+  },
+});
 
-module.exports = mongoose.model('card', cardSchema)
-
+module.exports = mongoose.model('card', cardSchema);

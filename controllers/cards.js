@@ -1,5 +1,13 @@
 const Card = require('../models/card') //работа с БД модели Card
 
+function errValidationCheck(err) {
+  if (err.name === 'ValidationError') {
+    return res.status(404).send({ message: `Произошла ошибка: ${err}`})
+  } else {
+    return res.status(400).send({ message: `Произошла ошибка: ${err}`})
+  }
+}
+
 module.exports.getAllCards = (req, res) => {
   Card.find({})
     .then((dataFromDB) => res.send(dataFromDB))
@@ -18,13 +26,7 @@ module.exports.addCard = (req, res) => {
         return res.status(404).send({ message: `Произошла ошибка: Карточка не найдена`})
       }
       res.send(dataFromDB)})
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: `Произошла ошибка: ${err}`})
-      } else {
-        return res.status(500).send({ message: `Произошла ошибка: ${err}`})
-      }
-    })
+    .catch(err => errValidationCheck(err))
 }
 
 module.exports.deleteCard = (req, res) => {
@@ -35,13 +37,7 @@ module.exports.deleteCard = (req, res) => {
       }
       res.status(200).send({ message: `Карточка с именем: ${dataFromBD.name} удалена`})
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(404).send({ message: `Произошла ошибка: ${err}`})
-      } else {
-        return res.status(400).send({ message: `Произошла ошибка: ${err}`})
-      }
-    })
+    .catch(err => errValidationCheck(err))
 }
 
 module.exports.addLike = (req, res) => {
@@ -57,13 +53,7 @@ module.exports.addLike = (req, res) => {
         }
         res.status(201).send({dataFromBD})
       })
-      .catch((err) => {
-        if (err.name === 'ValidationError') {
-          return res.status(404).send({ message: `Произошла ошибка: ${err}`})
-        } else {
-          return res.status(400).send({ message: `Произошла ошибка: ${err}`})
-        }
-      })
+      .catch(err => errValidationCheck(err))
 }
 
 module.exports.deleteLike = (req, res) => {
@@ -77,11 +67,5 @@ module.exports.deleteLike = (req, res) => {
         }
         res.status(200).send({dataFromBD})
       })
-      .catch((err) => {
-        if (err.name === 'ValidationError') {
-          return res.status(404).send({ message: `Произошла ошибка: ${err}`})
-        } else {
-          return res.status(400).send({ message: `Произошла ошибка: ${err}`})
-        }
-      })
+      .catch(err => errValidationCheck(err))
 }

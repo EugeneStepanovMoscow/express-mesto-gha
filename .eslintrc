@@ -12,7 +12,6 @@
     "ecmaVersion": "latest"
   },
   "plugins": [
-    "@typescript-eslint"
   ],
   "rules": {
     "no-underscore-dangle": "off"
