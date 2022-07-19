@@ -20,12 +20,7 @@ module.exports.findUser = (req, res) => {
       }
       return res.send(userFromBD);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
-      }
-      return res.status(500).send({ message: `Произошла ошибка: ${err}` });
-    });
+    .catch((err) => res.status(400).send({ message: `Произошла ошибка: ${err}` }));
 };
 
 module.exports.getAllUsers = (req, res) => {
