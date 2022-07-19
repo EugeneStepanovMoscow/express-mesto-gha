@@ -3,11 +3,10 @@ const Card = require('../models/card'); // работа с БД модели Car
 function errValidationCheck(err, res) {
   if (err.name === 'ValidationError') {
     return res.status(400).send({ message: `Произошла ошибка: ${err}` });
-  } else if (err.name === 'CastError') {
+  } if (err.name === 'CastError') {
     return res.status(400).send({ message: `Произошла ошибка: ${err}` });
-  } else {
-    return res.status(500).send({ message: `Произошла ошибка: ${err}` });
   }
+  return res.status(500).send({ message: `Произошла ошибка: ${err}` });
 }
 
 module.exports.getAllCards = (req, res) => {
