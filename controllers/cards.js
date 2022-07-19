@@ -13,7 +13,11 @@ module.exports.addCard = (req, res) => {
   }
   const owner = req.user._id
   Card.create({name, link, owner})
-    .then((dataFromDB) => res.send(dataFromDB))
+    .then((dataFromDB) => {
+      if (!dataFromBD) {
+        return res.status(404).send({ message: `Произошла ошибка: Карточка не найдена`})
+      }
+      res.send(dataFromDB)})
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send({ message: `Произошла ошибка: ${err}`})
@@ -28,7 +32,13 @@ module.exports.deleteCard = (req, res) => {
     .then((dataFromBD) => {
       res.send({ message: `Карточка с именем: ${dataFromBD.name} удалена`})
     })
-    .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}`}));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}`})
+      } else {
+        return res.status(404).send({ message: `Произошла ошибка: ${err}`})
+      }
+    })
 }
 
 module.exports.addLike = (req, res) => {
