@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-//схема пользователя в базе
+// схема пользователя в базе
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -17,8 +17,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     require: true,
-  }
-})
+  },
+});
 
-module.exports = mongoose.model('user', userSchema)
-
+module.exports = mongoose.model('user', userSchema);
