@@ -50,7 +50,7 @@ module.exports.addLike = (req, res) => {
         } else {
           return res.status(400).send({ message: `Произошла ошибка: ${err}`})
         }
-      }
+      })
 }
 
 module.exports.deleteLike = (req, res) => {
