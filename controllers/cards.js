@@ -37,22 +37,18 @@ module.exports.addLike = (req, res) => {
     {$addToSet: {likes: req.user._id}},
     {new: true,
     runValidators: true}
-    // (err) => {
-    //   if (err) {
-    //     res.status(404).send({message: err})
-    //   }
     )
       .then((dataFromBD) => {
         if (!dataFromBD) {
-          return res.status(400).send({ message: `Произошла ошибка: Карточка не найдена`})
+          return res.status(404).send({ message: `Произошла ошибка: Карточка не найдена`})
         }
         res.status(201).send({dataFromBD})
       })
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          return res.status(404).send({ message: `Произошла ошибка: ${err}`})
-        } else {
           return res.status(400).send({ message: `Произошла ошибка: ${err}`})
+        } else {
+          return res.status(404).send({ message: `Произошла ошибка: ${err}`})
         }
       })
 }
@@ -64,7 +60,7 @@ module.exports.deleteLike = (req, res) => {
     {new: true})
       .then((dataFromBD) => {
         if (!dataFromBD) {
-          return res.status(400).send({ message: `Произошла ошибка: Карточка не найдена`})
+          return res.status(404).send({ message: `Произошла ошибка: Карточка не найдена`})
         }
         res.status(200).send({dataFromBD})
       })
