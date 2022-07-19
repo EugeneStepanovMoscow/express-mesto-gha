@@ -23,7 +23,7 @@ module.exports.addCard = (req, res) => {
       if (!dataFromDB) {
         return res.status(404).send({ message: 'Произошла ошибка: Карточка не найдена' });
       }
-      res.send(dataFromDB);
+      return res.send(dataFromDB);
     })
     .catch((err) => errValidationCheck(err, res));
 };
@@ -34,7 +34,7 @@ module.exports.deleteCard = (req, res) => {
       if (!dataFromBD) {
         return res.status(404).send({ message: 'Произошла ошибка: Карточка не найдена' });
       }
-      res.status(200).send({ message: `Карточка с именем: ${dataFromBD.name} удалена` });
+      return res.status(200).send({ message: `Карточка с именем: ${dataFromBD.name} удалена` });
     })
     .catch((err) => errValidationCheck(err, res));
 };
@@ -52,7 +52,7 @@ module.exports.addLike = (req, res) => {
       if (!dataFromBD) {
         return res.status(404).send({ message: 'Произошла ошибка: Карточка не найдена' });
       }
-      res.status(200).send({ dataFromBD });
+      return res.status(200).send({ dataFromBD });
     })
     .catch((err) => errValidationCheck(err, res));
 };
@@ -67,7 +67,7 @@ module.exports.deleteLike = (req, res) => {
       if (!dataFromBD) {
         return res.status(404).send({ message: 'Произошла ошибка: Карточка не найдена' });
       }
-      res.status(200).send({ dataFromBD });
+      return res.status(200).send({ dataFromBD });
     })
     .catch((err) => errValidationCheck(err, res));
 };
