@@ -1,14 +1,5 @@
 const Card = require('../models/card'); // работа с БД модели Card
 
-function errValidationCheck(err, res) {
-  if (err.name === 'ValidationError') {
-    return res.status(400).send({ message: `Произошла ошибка: ${err}` });
-  } if (err.name === 'CastError') {
-    return res.status(400).send({ message: `Произошла ошибка: ${err}` });
-  }
-  return res.status(500).send({ message: `Произошла ошибка: ${err}` });
-}
-
 module.exports.getAllCards = (req, res) => {
   Card.find({})
     .then((dataFromDB) => res.send(dataFromDB))
@@ -25,7 +16,12 @@ module.exports.addCard = (req, res) => {
       }
       return res.send(dataFromDB);
     })
-    .catch((err) => errValidationCheck(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
+      }
+      return res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -36,7 +32,14 @@ module.exports.deleteCard = (req, res) => {
       }
       return res.status(200).send({ message: `Карточка с именем: ${dataFromBD.name} удалена` });
     })
-    .catch((err) => errValidationCheck(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
+      } if (err.name === 'CastError') {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
+      }
+      return res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
 };
 
 module.exports.addLike = (req, res) => {
@@ -54,7 +57,14 @@ module.exports.addLike = (req, res) => {
       }
       return res.status(200).send({ dataFromBD });
     })
-    .catch((err) => errValidationCheck(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
+      } if (err.name === 'CastError') {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
+      }
+      return res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
 };
 
 module.exports.deleteLike = (req, res) => {
@@ -69,5 +79,12 @@ module.exports.deleteLike = (req, res) => {
       }
       return res.status(200).send({ dataFromBD });
     })
-    .catch((err) => errValidationCheck(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
+      } if (err.name === 'CastError') {
+        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
+      }
+      return res.status(500).send({ message: `Произошла ошибка: ${err}` });
+    });
 };
