@@ -47,7 +47,7 @@ module.exports.login = (req, res) => {
   if (!validator.isEmail(email)) {
     return res.status(400).send({ message: 'Введен некорректный Email' });
   }
-  User.findOne({ email })
+  User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return res.status(403).send({ message: 'Такого пользователя не существует' });

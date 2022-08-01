@@ -24,22 +24,22 @@ module.exports.addCard = (req, res) => {
     });
 };
 
+
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
-    .then((dataFromBD) => {
-      if (!dataFromBD) {
-        return res.status(404).send({ message: 'Произошла ошибка: Карточка не найдена' });
+  Card.findById(req.params.id)
+    .then((card) => {
+      if (!(card.owner._id.toString() === req.user._id)) {
+        return res.status(401).send({message: `Нет прав для редактирования карточки`})
       }
-      return res.status(200).send({ message: `Карточка с именем: ${dataFromBD.name} удалена` });
+      Card.findByIdAndDelete(req.params.id)
+        .then((card) => {
+          return res.status(200).send({message: `Карточка ${card.name} удалена`})
+        })
+        .catch ((err) => {
+          return res.status(500).send({message: `Ошибка ${ers}`})
+        })
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
-      } if (err.name === 'CastError') {
-        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
-      }
-      return res.status(500).send({ message: `Произошла ошибка: ${err}` });
-    });
+    .catch((err) => res.status(404).send(err));
 };
 
 module.exports.addLike = (req, res) => {
