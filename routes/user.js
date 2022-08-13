@@ -9,18 +9,35 @@ const {
   getRegisteredUser,
 } = require('../controllers/users');
 
+const { celebrate, Joi, errors} = require('celebrate');
+const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\d\w \.-]*)*\/?$/i;
+
 // получаем всх пользователей
 router.get('/', getAllUsers);
+
 
 router.get('/me', getRegisteredUser);
 // изменение аватара
 // Добавляем пользователя
-router.get('/:id', findUser);
+router.get('/:id', celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().length(10).hex().required(),
+  })
+}), findUser);
 // обновление профиля
 
-router.patch('/me', profileUserUpdate);
+router.patch('/me', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30)
+  })
+}), profileUserUpdate);
 
 // изменение аватара
-router.patch('/me/avatar', avatarUserUpdate);
+router.patch('/me/avatar', celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().pattern(urlPattern)
+  })
+}), avatarUserUpdate);
 
 module.exports = router;

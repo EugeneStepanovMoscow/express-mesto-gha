@@ -10,7 +10,7 @@ const { celebrate, Joi, errors} = require('celebrate');
 
 const { PORT = 3000 } = process.env; // присваиваем номер порта из окружения или 3000 по умолчанию
 
-const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\d\w \.-]*)*\/?$/i
+const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\d\w \.-]*)*\/?$/i;
 
 // подключаемся к серверу базы
 // !!!!!!При включении параметров useCreateIndex и useFindAndModify выдает ошибку!!!!!!
@@ -45,23 +45,23 @@ app.use('/signin', celebrate({
 
 app.use(authCheck); // проверка авторизации;
 
-app.use('/users', celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().pattern(urlPattern),
-  })
-}), routerUser);
+app.use('/users', routerUser);
 
 app.use('/signout', logout);
 
-app.use('/cards', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().pattern(urlPattern),
-  }),
-  params: Joi.object().keys({
-    id: Joi.string().length(10).hex().required(),
-  })
-}), routerCard);
+//перенести проверку celebrate в соответствующие рроуты
+
+app.use('/cards',
+// celebrate({
+//   body: Joi.object().keys({
+//     name: Joi.string().required().min(2).max(30),
+//     link: Joi.string().pattern(urlPattern),
+  // }),
+  // params: Joi.object().keys({
+  //   id: Joi.string().length(10).hex().required(),
+//   // })
+// }),
+routerCard);
 
 // app.use((req, res) => res.status(404).send({ message: 'Страница не найдена' }));
 
