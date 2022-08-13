@@ -34,7 +34,12 @@ app.use('/signup', celebrate({
     avatar: Joi.string().pattern(urlPattern),
   }).unknown(true),
 }), createUser);
-app.use('/signin', login);
+app.use('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(2).max(30),
+  })
+}), login);
 
 app.use(authCheck); // проверка авторизации;
 
@@ -46,7 +51,12 @@ app.use('/users', celebrate({
 
 app.use('/signout', logout);
 
-app.use('/cards', routerCard);
+app.use('/cards', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    link: Joi.string().pattern(urlPattern),
+  })
+}), routerCard);
 
 // app.use((req, res) => res.status(404).send({ message: 'Страница не найдена' }));
 
