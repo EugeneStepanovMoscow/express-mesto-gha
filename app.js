@@ -29,7 +29,7 @@ app.use('/signup', celebrate({
     password: Joi.string().required().min(2).max(30),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    // avatar:
+    avatar: Joi.string().min(8),
   }).unknown(true),
 }), createUser);
 app.use('/signin', login);
