@@ -15,13 +15,12 @@ const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\d\w \.-]*
 // получаем всх пользователей
 router.get('/', getAllUsers);
 
-
 router.get('/me', getRegisteredUser);
-// изменение аватара
-// Добавляем пользователя
+
+// поиск пользователя по id
 router.get('/:id', celebrate({
   params: Joi.object().keys({
-    id: Joi.string().length(10).hex().required(),
+    id: Joi.string().length(24).hex().required(),
   })
 }), findUser);
 // обновление профиля
