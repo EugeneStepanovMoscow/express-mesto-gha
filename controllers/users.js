@@ -8,20 +8,15 @@ const jwtLifeTime = '7d';
 // создание нового пользователя
 module.exports.createUser = (req, res) => {
   const { email, password } = req.body;
-  // проверка наличия почты и пароля в запросе
-  if (!email || !password) {
-    return res.status(400).send({ message: 'Email или пароль не переданы' });
-  }
-  // проверка на валидность почты
-  if (!validator.isEmail(email)) {
-    return res.status(400).send({ message: 'Введен некоррекктный Email' });
-  }
+  // проверка наличия почты и пароля в запросе celebrate
+
   // проверка валидной почты на совпадение
   User.findOne({ email })
     .then((oldUser) => {
       if (oldUser) {
         return res.status(409).send({ message: `Пользователь с Email: ${oldUser.email} уже существует` });
       }
+      //  запись пользователя в случае несовпадения почты
       // хеширование пароля полученного из запроса
       bcrypt.hash(password, 10)
         .then((hash) => {

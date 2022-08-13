@@ -5,8 +5,8 @@ const routerUser = require('./routes/user');
 const routerCard = require('./routes/card');
 const { createUser, login, logout } = require('./controllers/users');
 const { authCheck } = require('./middlewares/auth');
-const { isOwner } = require('./middlewares/isOwner');
-const { celebrate, Joi , errors} = require('celebrate');
+const { errorsCheck } = require('./middlewares/errors');
+const { celebrate, Joi, errors} = require('celebrate');
 
 const { PORT = 3000 } = process.env; // присваиваем номер порта из окружения или 3000 по умолчанию
 
@@ -34,18 +34,18 @@ app.use('/signup', celebrate({
 }), createUser);
 app.use('/signin', login);
 
-app.use(authCheck);
+app.use(authCheck); // проверка авторизации;
 
 app.use('/users', routerUser);
 app.use('/signout', logout);
 
-app.use(isOwner);
-
 app.use('/cards', routerCard);
 
-app.use((req, res) => res.status(404).send({ message: 'Страница не найдена' }));
+// app.use((req, res) => res.status(404).send({ message: 'Страница не найдена' }));
 
 app.use(errors()); // обработка ошибок сгенерированных Joi
+
+app.use(errorsCheck)
 
 app.listen(PORT, () => {
   // console.log(`App listening on port ${PORT}`);
