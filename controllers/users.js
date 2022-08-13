@@ -21,7 +21,7 @@ module.exports.createUser = (req, res) => {
       bcrypt.hash(password, 10)
         .then((hash) => {
           User.create({ email, password: hash }) // в базу записывается хеш
-            .then((dataFromDB) => res.status(201).send({message: `Пользователь: ${dataFromDB} создан`}))
+            .then((dataFromDB) => res.status(201).send(dataFromDB.email))
             .catch((err) => {
               if (err.name === 'ValidationError') {
                 return res.status(400).send({ message: `Произошла ошибка: ${err}` });
