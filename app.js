@@ -25,6 +25,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use('/signout', logout);
+
 app.use('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -34,6 +35,7 @@ app.use('/signup', celebrate({
     avatar: Joi.string().pattern(urlPattern),
   }).unknown(true),
 }), createUser);
+
 app.use('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -55,6 +57,9 @@ app.use('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().pattern(urlPattern),
+  }),
+  params: Joi.object().keys({
+    id: Joi.string().length(10).hex().required(),
   })
 }), routerCard);
 

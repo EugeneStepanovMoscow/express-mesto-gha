@@ -45,7 +45,7 @@ module.exports.login = (req, res) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return res.status(403).send({ message: 'Такого пользователя не существует' });
+        return res.status(401).send({ message: 'Такого пользователя не существует' });
       }
       bcrypt.compare(password, user.password, (err, isValidPassword) => {
         if (!isValidPassword) {
@@ -83,9 +83,9 @@ module.exports.findUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(400).send({ message: `Произошла ошибка: ${err}` });
+        return res.status(400).send({ message: `Произошла ошибка1: ${err}` });
       }
-      return res.status(500).send({ message: `Произошла ошибка: ${err}` });
+      return res.status(500).send({ message: `Произошла ошибка2: ${err}` });
     });
 };
 
