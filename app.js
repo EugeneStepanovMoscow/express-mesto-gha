@@ -10,6 +10,8 @@ const { celebrate, Joi, errors} = require('celebrate');
 
 const { PORT = 3000 } = process.env; // присваиваем номер порта из окружения или 3000 по умолчанию
 
+const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\d\w \.-]*)*\/?$/i
+
 // подключаемся к серверу базы
 // !!!!!!При включении параметров useCreateIndex и useFindAndModify выдает ошибку!!!!!!
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -29,14 +31,19 @@ app.use('/signup', celebrate({
     password: Joi.string().required().min(2).max(30),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().min(8),
+    avatar: Joi.string().pattern(urlPattern),
   }).unknown(true),
 }), createUser);
 app.use('/signin', login);
 
 app.use(authCheck); // проверка авторизации;
 
-app.use('/users', routerUser);
+app.use('/users', celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().pattern(urlPattern),
+  })
+}), routerUser);
+
 app.use('/signout', logout);
 
 app.use('/cards', routerCard);
@@ -45,7 +52,7 @@ app.use('/cards', routerCard);
 
 app.use(errors()); // обработка ошибок сгенерированных Joi
 
-app.use(errorsCheck)
+app.use(errorsCheck);
 
 app.listen(PORT, () => {
   // console.log(`App listening on port ${PORT}`);
