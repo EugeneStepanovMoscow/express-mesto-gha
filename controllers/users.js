@@ -14,14 +14,14 @@ module.exports.createUser = (req, res) => {
   User.findOne({ email })
     .then((oldUser) => {
       if (oldUser) {
-        return res.status(409).send({ message: `Пользователь с Email: ${oldUser.email} уже существует` });
+        return res.status(409).send({ message: `Пользователь с Email: ${email} уже существует` });
       }
       //  запись пользователя в случае несовпадения почты
       // хеширование пароля полученного из запроса
       bcrypt.hash(password, 10)
         .then((hash) => {
           User.create({ email, password: hash }) // в базу записывается хеш
-            .then((dataFromDB) => res.status(201).send(dataFromDB))
+            .then((dataFromDB) => res.status(201).send({message: `Пользователь: ${dataFromDB.email} создан`}))
             .catch((err) => {
               if (err.name === 'ValidationError') {
                 return res.status(400).send({ message: `Произошла ошибка: ${err}` });
