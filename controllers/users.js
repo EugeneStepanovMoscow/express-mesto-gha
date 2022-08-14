@@ -2,11 +2,13 @@ const bcrypt = require('bcrypt'); // подключение шифровальщ
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user'); // работа с БД модели User
-
+const ConflictError = require('../errors/conflictError')
 const jwtLifeTime = '7d';
 
+
+
 // создание нового пользователя
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { email, password } = req.body;
   // проверка наличия почты и пароля в запросе celebrate
 
@@ -14,14 +16,14 @@ module.exports.createUser = (req, res) => {
   User.findOne({ email })
     .then((oldUser) => {
       if (oldUser) {
-        return res.status(409).send({ message: `Пользователь с Email: ${email} уже существует` });
+        throw new ConflictError(`Пользователь с Email: ${email} уже существует`)
       }
       //  запись пользователя в случае несовпадения почты
       // хеширование пароля полученного из запроса
       bcrypt.hash(password, 10)
         .then((hash) => {
           User.create({ email, password: hash }) // в базу записывается хеш
-            .then((dataFromDB) => res.status(201).send({email: dataFromDB.email}))
+            .then((dataFromDB) => res.status(201).send({message: `Пользователи с email: ${dataFromDB.email} создан`}))
             .catch((err) => {
               if (err.name === 'ValidationError') {
                 return res.status(400).send({ message: `Произошла ошибка: ${err}` });
@@ -35,13 +37,14 @@ module.exports.createUser = (req, res) => {
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).send({ message: 'Email или пароль не переданы' });
-  }
+  // проверка не нужна так как запрос валидируется
+  // if (!email || !password) {
+  //   return res.status(400).send({ message: 'Email или пароль не переданы' });
+  // }
   // проверка на валидность почты
-  if (!validator.isEmail(email)) {
-    return res.status(400).send({ message: 'Введен некорректный Email' });
-  }
+  // if (!validator.isEmail(email)) {
+  //   return res.status(400).send({ message: 'Введен некорректный Email' });
+  // }
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {

@@ -49,21 +49,9 @@ app.use('/users', routerUser);
 
 app.use('/signout', logout);
 
-//перенести проверку celebrate в соответствующие рроуты
-
 app.use('/cards',
-// celebrate({
-//   body: Joi.object().keys({
-//     name: Joi.string().required().min(2).max(30),
-//     link: Joi.string().pattern(urlPattern),
-  // }),
-  // params: Joi.object().keys({
-  //   id: Joi.string().length(10).hex().required(),
-//   // })
-// }),
-routerCard);
 
-// app.use((req, res) => res.status(404).send({ message: 'Страница не найдена' }));
+routerCard);
 
 app.use(errors()); // обработка ошибок сгенерированных Joi
 

@@ -23,7 +23,7 @@ module.exports.addCard = (req, res) => {
     });
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.id)
     .then((card) => {
       if (!(card.owner._id.toString() === req.user._id)) {
@@ -38,7 +38,7 @@ module.exports.deleteCard = (req, res) => {
           return res.status(500).send({message: `Ошибка ${ers}`})
         })
     })
-    .catch((err) => res.status(404).send({message: 'Карточка не найдена'}));
+    .catch((err) => res.status(404).send({message: `Карточка не найдена ${req.params.id}`}));
 };
 
 module.exports.addLike = (req, res) => {
