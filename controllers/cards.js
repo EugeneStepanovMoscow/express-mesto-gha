@@ -13,7 +13,7 @@ module.exports.addCard = (req, res) => {
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then((dataFromDB) => {
-      return res.send({message: `Карточка с именем -= ${dataFromDB.name} =- создана`});
+      return res.send({message: `Карточка -= ${dataFromDB} =- создана`});
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -38,7 +38,7 @@ module.exports.deleteCard = (req, res, next) => {
           return res.status(500).send({message: `Ошибка ${ers}`})
         })
     })
-    .catch((err) => res.status(404).send({message: `Карточка не найдена ${req.params.id}`}));
+    .catch((err) => res.status(err.statusCode).send({err}));
 };
 
 module.exports.addLike = (req, res) => {
@@ -54,7 +54,7 @@ module.exports.addLike = (req, res) => {
       if (!dataFromBD) {
         return res.status(404).send({ message: 'Произошла ошибка: Карточка не найдена' });
       }
-      return res.status(200).send({message: `Карточку: -= ${dataFromBD.name} =- лайкнули: ${dataFromBD.likes.length} раз`});
+      return res.status(200).send({ message: `Карточку: -= ${dataFromBD.name} =- лайкнули: ${dataFromBD.likes.length} раз` });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
