@@ -23,7 +23,8 @@ module.exports.createUser = (req, res, next) => {
       bcrypt.hash(password, 10)
         .then((hash) => {
           User.create({ email, password: hash }) // в базу записывается хеш
-            .then((dataFromDB) => res.status(201).send({message: `Пользователи с email: ${dataFromDB.email} создан`}))
+            .then((dataFromDB) => res.status(201).send({dataFromDB}))
+            // .then((dataFromDB) => res.status(201).send({message: `Пользователи с email: ${dataFromDB.email} создан`}))
             .catch((err) => {
               if (err.name === 'ValidationError') {
                 return res.status(400).send({ message: `Произошла ошибка: ${err}` });
