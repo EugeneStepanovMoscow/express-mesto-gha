@@ -1,12 +1,12 @@
 const express = require('express'); // подключаем экспресс
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { celebrate, Joi, errors } = require('celebrate');
 const routerUser = require('./routes/user');
 const routerCard = require('./routes/card');
 const { createUser, login, logout } = require('./controllers/users');
 const { authCheck } = require('./middlewares/auth');
 const { errorsCheck } = require('./middlewares/errors');
-const { celebrate, Joi, errors} = require('celebrate');
 
 const { PORT = 3000 } = process.env; // присваиваем номер порта из окружения или 3000 по умолчанию
 
@@ -40,7 +40,7 @@ app.use('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(2).max(30),
-  })
+  }),
 }), login);
 
 app.use(authCheck); // проверка авторизации;
@@ -49,9 +49,10 @@ app.use('/users', routerUser);
 
 app.use('/signout', logout);
 
-app.use('/cards',
-
-routerCard);
+app.use(
+  '/cards',
+  routerCard,
+);
 
 app.use(errors()); // обработка ошибок сгенерированных Joi
 

@@ -1,6 +1,5 @@
 const Card = require('../models/card'); // работа с БД модели Card
-const NotFoundError = require('../errors/notFoundError')
-const ForbiddenError = require('../errors/forbiddenError')
+const ForbiddenError = require('../errors/forbiddenError');
 
 module.exports.getAllCards = (req, res) => {
   Card.find({})
@@ -12,9 +11,7 @@ module.exports.addCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((dataFromDB) => {
-      return res.send({message: `Карточка -= ${dataFromDB} =- создана`});
-    })
+    .then((dataFromDB) => res.send({ message: `Карточка -= ${dataFromDB} =- создана` }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send({ message: `Произошла ошибка: ${err}` });
@@ -23,22 +20,18 @@ module.exports.addCard = (req, res) => {
     });
 };
 
-module.exports.deleteCard = (req, res, next) => {
+module.exports.deleteCard = (req, res) => {
   Card.findById(req.params.id)
     .then((card) => {
       if (!(card.owner._id.toString() === req.user._id)) {
-        throw new ForbiddenError(`Нет прав для редактирования карточки`)
+        throw new ForbiddenError('Нет прав для редактирования карточки');
         // return res.status(401).send({message: `Нет прав для редактирования карточки`})
       }
       Card.findByIdAndDelete(req.params.id)
-        .then((card) => {
-          return res.status(200).send({message: `Карточка ${card.name} удалена`})
-        })
-        .catch ((err) => {
-          return res.status(500).send({message: `Ошибка ${ers}`})
-        })
+        .then((cardDeleted) => res.status(200).send({ message: `Карточка ${cardDeleted.name} удалена` }))
+        .catch((err) => res.status(500).send({ message: `Ошибка ${err}` }));
     })
-    .catch((err) => res.status(err.statusCode).send({err}));
+    .catch((err) => res.status(err.statusCode).send({ err }));
 };
 
 module.exports.addLike = (req, res) => {

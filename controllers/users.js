@@ -1,14 +1,12 @@
 const bcrypt = require('bcrypt'); // подключение шифровальщика
-const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user'); // работа с БД модели User
-const ConflictError = require('../errors/conflictError')
+const ConflictError = require('../errors/conflictError');
+
 const jwtLifeTime = '7d';
 
-
-
 // создание нового пользователя
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = (req, res) => {
   const { email, password } = req.body;
   // проверка наличия почты и пароля в запросе celebrate
 
@@ -16,14 +14,14 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })
     .then((oldUser) => {
       if (oldUser) {
-        throw new ConflictError(`Пользователь с Email: ${email} уже существует`)
+        throw new ConflictError(`Пользователь с Email: ${email} уже существует`);
       }
       //  запись пользователя в случае несовпадения почты
       // хеширование пароля полученного из запроса
       bcrypt.hash(password, 10)
         .then((hash) => {
           User.create({ email, password: hash }) // в базу записывается хеш
-            .then((dataFromDB) => res.status(201).send({message: `Пользователи с email: ${dataFromDB.email} создан`}))
+            .then((dataFromDB) => res.status(201).send({ message: `Пользователи с email: ${dataFromDB.email} создан` }))
             .catch((err) => {
               if (err.name === 'ValidationError') {
                 return res.status(400).send({ message: `Произошла ошибка: ${err}` });
@@ -31,7 +29,7 @@ module.exports.createUser = (req, res, next) => {
             });
         });
     })
-    .catch((err) => res.status(err.statusCode).send({err}));
+    .catch((err) => res.status(err.statusCode).send({ err }));
 };
 
 module.exports.login = (req, res) => {
