@@ -91,7 +91,7 @@ module.exports.findUser = (req, res) => {
 
 module.exports.getAllUsers = (req, res) => {
   User.find({})
-    .then((dataFromDB) => res.send(dataFromDB))
+    .then((dataFromDB) => res.status(201).send(dataFromDB))
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));
 };
 //--------------------------------------------------------
