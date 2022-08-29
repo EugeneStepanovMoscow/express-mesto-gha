@@ -2,11 +2,13 @@ const express = require('express'); // подключаем экспресс
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+const corsUnit = require('cors');
 const routerUser = require('./routes/user');
 const routerCard = require('./routes/card');
 const { createUser, login, logout } = require('./controllers/users');
 const { authCheck } = require('./middlewares/auth');
 const { errorsCheck } = require('./middlewares/errors');
+const cookieParser = require('cookie-parser');
 
 const { PORT = 3000 } = process.env; // присваиваем номер порта из окружения или 3000 по умолчанию
 
@@ -17,12 +19,58 @@ const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([\da-z\.]{2,6})([\/\d\w \.-]*
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   // useCreateIndex: true
-  // useFindAndModify: true
+  // useFindAndModify: truenpm run dev
+
 });
 
 const app = express();
 
+// app.use(corsUnit());
 app.use(bodyParser.json());
+app.use(cookieParser());
+
+app.use(corsUnit());
+
+// const allowedCors = [
+//   'http://localhost:3001',
+//   '://localhost:3001',
+//   'localhost:3001',
+
+// ];
+
+// app.use((req, res, next) => {
+//   const { origin } = req.headers;
+//   const { method } = req;
+//   const requestHeaders = req.headers['access-control-request-headers'];
+//   const DEFAULT_ALLOWED_METHODS = 'GET, HEAD, PUT, PATCH, POST, DELETE';
+
+//   if (allowedCors.includes(origin)) {
+//     res.header('Access-Control-Allow-Origin', origin);
+//     res.header('Access-Control-Allow-Credentails', true);
+//   } else if ((method === 'OPTIONS')) {
+//     res.header('Access-Control_Allow-Methods', DEFAULT_ALLOWED_METHODS);
+//     res.header('Access-Control-Allow-Headers', requestHeaders);
+//     res.end();
+//   }
+//   next();
+// });
+
+// app.use((req, res, next) => {
+//   const { origin } = req.headers;
+//   const { method } = req;
+//   const requestHeaders = req.headers['access-control-request-headers'];
+//   const DEFAULT_ALLOWED_METHODS = 'GET, HEAD, PUT, PATCH, POST, DELETE';
+
+//     res.header('Access-Control-Allow-Origin', origin);
+//     res.header('Access-Control-Allow-Credentails', true);
+
+//     res.header('Access-Control_Allow-Methods', DEFAULT_ALLOWED_METHODS);
+//     res.header('Access-Control-Allow-Headers', requestHeaders);
+//     res.end();
+//   next();
+// });
+
+
 
 app.use('/signout', logout);
 
@@ -49,10 +97,7 @@ app.use('/users', routerUser);
 
 app.use('/signout', logout);
 
-app.use(
-  '/cards',
-  routerCard,
-);
+app.use('/cards', routerCard,);
 
 app.use(errors()); // обработка ошибок сгенерированных Joi
 

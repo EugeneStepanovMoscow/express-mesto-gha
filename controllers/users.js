@@ -34,14 +34,6 @@ module.exports.createUser = (req, res) => {
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
-  // проверка не нужна так как запрос валидируется
-  // if (!email || !password) {
-  //   return res.status(400).send({ message: 'Email или пароль не переданы' });
-  // }
-  // проверка на валидность почты
-  // if (!validator.isEmail(email)) {
-  //   return res.status(400).send({ message: 'Введен некорректный Email' });
-  // }
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
@@ -52,7 +44,10 @@ module.exports.login = (req, res) => {
           return res.status(401).send({ message: 'пароль неверный' });
         }
         const token = jwt.sign({ id: user._id }, 'strongSecret', { expiresIn: jwtLifeTime });
-        return res.cookie('access_token', token, { httpOnly: true }).status(200).send({ message: 'token передан' }); // отправка токена в куки
+        // return res.send({token});
+        // return res.cookie('access_token', token, { httpOnly: true, sameSite: true });
+        res.status(200).send({ token });
+        //return res.cookie('access_token', token, { httpOnly: false }).status(200).send({ message: 'token передан' }); // отправка токена в куки
       });
     })
     .catch((err) => res.status(500).send({ message: `Произошла ошибка: ${err}` }));

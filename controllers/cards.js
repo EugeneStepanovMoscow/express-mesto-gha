@@ -11,7 +11,7 @@ module.exports.addCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((dataFromDB) => res.send({ message: `Карточка -= ${dataFromDB} =- создана` }))
+    .then((dataFromDB) => res.send(dataFromDB))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send({ message: `Произошла ошибка: ${err}` });
