@@ -47,7 +47,7 @@ module.exports.addLike = (req, res) => {
       if (!dataFromBD) {
         return res.status(404).send({ message: 'Произошла ошибка: Карточка не найдена' });
       }
-      return res.status(200).send({ message: `Карточку: -= ${dataFromBD.name} =- лайкнули: ${dataFromBD.likes.length} раз` });
+      return res.status(200).send(dataFromBD);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -69,7 +69,7 @@ module.exports.deleteLike = (req, res) => {
       if (!dataFromBD) {
         return res.status(404).send({ message: 'Произошла ошибка: Карточка не найдена' });
       }
-      return res.status(200).send({ message: `У карточки: -= ${dataFromBD.name} =- удален лайк` });
+      return res.status(200).send(dataFromBD);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

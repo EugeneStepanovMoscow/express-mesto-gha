@@ -17,7 +17,6 @@ module.exports.authCheck = (req, res, next) => {
       return req.user;
     });
   } else {
-    console.log(`Токен не найден`)
     throw new notFoundError(`Токен не найден`);
   }
   next();
