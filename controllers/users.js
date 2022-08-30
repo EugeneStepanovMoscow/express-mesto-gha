@@ -2,8 +2,9 @@ const bcrypt = require('bcrypt'); // подключение шифровальщ
 const jwt = require('jsonwebtoken');
 const User = require('../models/user'); // работа с БД модели User
 const ConflictError = require('../errors/conflictError');
-
-const jwtLifeTime = '7d';
+const dotenv = require('dotenv').config();
+const { JWT_SECRET } = process.env;
+const jwtLifeTime = '1d';
 
 // создание нового пользователя
 module.exports.createUser = (req, res) => {
@@ -43,7 +44,7 @@ module.exports.login = (req, res) => {
         if (!isValidPassword) {
           return res.status(401).send({ message: 'пароль неверный' });
         }
-        const token = jwt.sign({ id: user._id }, 'strongSecret', { expiresIn: jwtLifeTime });
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: jwtLifeTime });
         // return res.send({token});
         // return res.cookie('access_token', token, { httpOnly: true, sameSite: true });
         res.status(200).send({ token });
