@@ -9,7 +9,7 @@ const { createUser, login, logout } = require('./controllers/users');
 const { authCheck } = require('./middlewares/auth');
 const { errorsCheck } = require('./middlewares/errors');
 const cookieParser = require('cookie-parser');
-const { requestLogger, errorLogger } = require('./middlewares/logger')
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env; // присваиваем номер порта из окружения или 3000 по умолчанию
 
@@ -26,7 +26,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 const app = express();
 
-// app.use(corsUnit());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
