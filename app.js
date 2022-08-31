@@ -9,6 +9,7 @@ const { createUser, login, logout } = require('./controllers/users');
 const { authCheck } = require('./middlewares/auth');
 const { errorsCheck } = require('./middlewares/errors');
 const cookieParser = require('cookie-parser');
+const { requestLogger, errorLogger } = require('./middlewares/logger')
 
 const { PORT = 3000 } = process.env; // присваиваем номер порта из окружения или 3000 по умолчанию
 
@@ -30,6 +31,8 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(corsUnit());
+
+app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -62,10 +65,11 @@ app.use('/users', routerUser);
 
 app.use('/signout', logout);
 
-app.use('/cards', routerCard,);
+app.use('/cards', routerCard);
+
+app.use(errorLogger);
 
 app.use(errors()); // обработка ошибок сгенерированных Joi
-
 app.use(errorsCheck);
 
 app.listen(PORT, () => {
